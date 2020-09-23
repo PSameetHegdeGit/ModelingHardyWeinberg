@@ -1,7 +1,5 @@
-#Look into numpy and scipy again
-from collections import defaultdict
 import random
-import numpy as np
+
 
 
 class Species:
@@ -12,7 +10,7 @@ class Species:
     currentGenoTypeRatios = {}
     nextGenoTypeRatios = {}
 
-    def __init__(self, no_of_alleles, population, letter="A"):
+    def __init__(self, population, no_of_alleles=2, letter="A"):
         self.no_of_alleles = no_of_alleles
         self.population = population
         self.letter = letter
@@ -30,7 +28,6 @@ class Species:
 
         print("Alleles: " + str(self.alleleList))
 
-        #List Comprehension ~ Doesn't work: self.genoTypeList.append([allele + allele2 for allele in self.alleleList for allele2 in self.alleleList])
         for allele in range(len(self.alleleList)):
             for allele1 in range(allele, len(self.alleleList)):
                 self.genoTypeList.append((self.alleleList[allele] + self.alleleList[allele1]))
@@ -49,7 +46,6 @@ class Species:
             remove = randomNumber
 
         genoTypeDictionary[self.genoTypeList[length - 1]] = (self.population - remove)/self.population
-        #print(genoTypeDictionary)
         self.generations.append(genoTypeDictionary)
         self.currentGenoTypeRatios = genoTypeDictionary
 
@@ -62,21 +58,17 @@ class Species:
 
         self.nextGenoTypeRatios = dict.fromkeys(self.currentGenoTypeRatios,0) #Dict.fromkeys() produces a new dictionary that sets all items of old dictionary to 0
 
-        #print(self.nextGenoTypeRatios)
 
         for matingCount in range(no_of_matings + 1):
             genotype_Selection1 = random.choices(alleles, frequencies)[0]
-            #print("genotype Selected: " + genotype_Selection1)
 
             genotype_Selection2 = random.choices(alleles, frequencies)[0]
-            #print("genotype Selected: " + genotype_Selection2)
 
             newGenotype = random.choices(genotype_Selection1)[0] + random.choices(genotype_Selection2)[0]
 
             if (newGenotype == "aA"):
                 newGenotype = "Aa"
 
-            #print("new Genotype: " + newGenotype)
 
             self.nextGenoTypeRatios[newGenotype] += 1
 
@@ -91,8 +83,17 @@ class Species:
 
 
 
+if __name__ == "__main__":
+    species = Species(int(50))
+    species.setAlleleCombos()
+    for i in range(3):
+        species.mate(int(50))
 
+    print(species.generations)
+    indices = [i for i in range(len(species.generations))]
+    generations = dict(zip(indices, species.generations))
 
+    print(generations)
 
 
 
